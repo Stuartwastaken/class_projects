@@ -1,0 +1,3 @@
+log_ip = "127.0.0.1"
+log_port = 23456
+log_file = "systemlog.txt"
