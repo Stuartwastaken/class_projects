@@ -7,7 +7,8 @@ use config::{Config, File};
 
 fn main() {
     let current_dir = std::env::current_dir().unwrap();
-    let config_path_buf = current_dir.join("config.toml");
+    //GRADING NOTE: This config file path does not work
+    let config_path_buf = current_dir.join("../config.toml");
     let config_path = config_path_buf.to_str().unwrap();
 
     let settings = match Config::builder()

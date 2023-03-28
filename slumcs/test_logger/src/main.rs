@@ -33,7 +33,7 @@ fn main(){
 fn thread_body( id: i32, num_messages: i32 ){
 
     let current_dir = std::env::current_dir().unwrap();
-    let config_path_buf = current_dir.join("config.toml");
+    let config_path_buf = current_dir.join("../config.toml");
     let config_path = config_path_buf.to_str().unwrap();
 
     //Connect to the logging server
@@ -54,3 +54,4 @@ fn thread_body( id: i32, num_messages: i32 ){
 
     log_disconnect( &mut log );
 }
+

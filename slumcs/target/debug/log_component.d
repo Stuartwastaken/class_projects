@@ -1,1 +1,1 @@
-/Users/stuart/2510/sray14/slumcs/target/debug/log_component: /Users/stuart/2510/sray14/slumcs/log_component/src/main.rs /Users/stuart/2510/sray14/slumcs/send_log/src/lib.rs
+/mnt/c/Users/dsf90/Desktop/repos/gr2510/sp23_01/sray14/slumcs/target/debug/log_component: /mnt/c/Users/dsf90/Desktop/repos/gr2510/sp23_01/sray14/slumcs/log_component/src/main.rs /mnt/c/Users/dsf90/Desktop/repos/gr2510/sp23_01/sray14/slumcs/send_log/src/lib.rs
