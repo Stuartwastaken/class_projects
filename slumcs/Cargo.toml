@@ -3,5 +3,7 @@
 members = [
         "log_component",
         "send_log",
-        "deadlock_detect"
+        "deadlock_detect",
+        "crack",
+        "hash_demo"
 ]

@@ -1,0 +1,13 @@
+/Users/stuart/2510/sray14/slumcs/target/debug/deps/digest-938b668889f23816.rmeta: /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/lib.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/digest.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/dyn_digest.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/errors.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/fixed.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/variable.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/xof.rs
+
+/Users/stuart/2510/sray14/slumcs/target/debug/deps/libdigest-938b668889f23816.rlib: /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/lib.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/digest.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/dyn_digest.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/errors.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/fixed.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/variable.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/xof.rs
+
+/Users/stuart/2510/sray14/slumcs/target/debug/deps/digest-938b668889f23816.d: /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/lib.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/digest.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/dyn_digest.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/errors.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/fixed.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/variable.rs /Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/xof.rs
+
+/Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/lib.rs:
+/Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/digest.rs:
+/Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/dyn_digest.rs:
+/Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/errors.rs:
+/Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/fixed.rs:
+/Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/variable.rs:
+/Users/stuart/.cargo/registry/src/github.com-1ecc6299db9ec823/digest-0.9.0/src/xof.rs:

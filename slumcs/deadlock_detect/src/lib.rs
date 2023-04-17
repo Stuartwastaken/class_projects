@@ -2,129 +2,128 @@ use std::collections::HashMap;
 use std::collections::HashSet;
 
 pub struct DeadlockDetector {
-    processes: HashMap<String, Vec<String>>,
-    resources: HashMap<String, Vec<String>>,
+    graph: HashMap<String, Vec<String>>,
+    waiting: HashMap<String, Vec<String>>,
 }
 
 impl DeadlockDetector {
     pub fn new() -> DeadlockDetector {
         DeadlockDetector {
-            processes: HashMap::new(),
-            resources: HashMap::new(),
+            graph: HashMap::new(),
+            waiting: HashMap::new(),
         }
     }
 
     pub fn add_process(&mut self, name: &str) {
-        self.processes.entry(name.to_string()).or_insert(vec![]);
+        self.graph.entry(name.to_string()).or_insert(Vec::new());
     }
 
     pub fn add_resource(&mut self, name: &str) {
-        self.resources.entry(name.to_string()).or_insert(vec![]);
+        self.graph.entry(name.to_string()).or_insert(Vec::new());
+        self.waiting.entry(name.to_string()).or_insert(Vec::new());
     }
 
     pub fn request(&mut self, process: &str, resource: &str) -> bool {
-        // Check if the resource is already being used
-        if let Some(used_by) = self.resources.get(resource) {
-            if used_by.contains(&process.to_string()) {
-                // Process already has claimed the resource, no deadlock
-                return true;
+        if self.graph[resource].is_empty() {
+            self.graph.get_mut(resource).unwrap().push(process.to_string());
+            println!("Request (empty): process: {}, resource: {}, graph: {:?}, waiting: {:?}", process, resource, self.graph, self.waiting);
+            true
+        } else {
+            self.graph.get_mut(process).unwrap().push(resource.to_string());
+            
+            if self.can_deadlock(process) {
+                self.graph.get_mut(process).unwrap().pop();
+                println!("Request (not empty - can deadlock): process: {}, resource: {}, graph: {:?}, waiting: {:?}", process, resource, self.graph, self.waiting);
+                false
             } else {
-                // Add an edge from the resource to the process
-                self.resources
-                    .entry(resource.to_string())
-                    .and_modify(|v| v.push(process.to_string()))
-                    .or_insert(vec![process.to_string()]);
-            }
-        } else {
-            // Add the resource to the graph
-            self.resources
-                .entry(resource.to_string())
-                .or_insert(vec![process.to_string()]);
-        }
-        println!("Added new request {process}")
-
-        // Check if the new edge created a deadlock cycle
-        if self.can_deadlock() {
-            // Remove the edge that was added
-            if let Some(used_by) = self.resources.get_mut(resource) {
-                used_by.retain(|p| p != process);
-            }
-            return false;
-        } else {
-            return true;
+                self.waiting.entry(resource.to_string()).or_insert(Vec::new()).push(process.to_string());
+                println!("Request (not empty - cannot deadlock): process: {}, resource: {}, graph: {:?}, waiting: {:?}", process, resource, self.graph, self.waiting);
+                true
+            }   
+                     
         }
     }
+    
 
     pub fn release(&mut self, process: &str, resource: &str, next_process: Option<&str>) -> bool {
-        // Remove the edge from the process to the resource
-        if let Some(uses) = self.processes.get_mut(process) {
-            uses.retain(|r| r != resource);
-        } else {
-            return false;
+        println!("(1) process: {}, resource: {}, next_process: {:?}, graph: {:?}", process, resource, next_process, self.graph);
+        
+        if let Some(pos) = self.graph[resource].iter().position(|x| x == process) {
+            self.graph.get_mut(resource).unwrap().remove(pos);
+            if let Some(pos) = self.graph[process].iter().position(|x| x == resource) {
+                self.graph.get_mut(process).unwrap().remove(pos);
+            }
         }
-
-        // Convert the edge from the resource to the process
-        if let Some(next_process) = next_process {
-            // Remove the edge from the resource to the current process
-            if let Some(used_by) = self.resources.get_mut(resource) {
-                used_by.retain(|p| p != process);
-            } else {
-                return false;
-            }
-
-            // Add the edge from the resource to the next process
-            if let Some(uses) = self.resources.get_mut(resource) {
-                uses.push(next_process.to_string());
-            } else {
-                return false;
-            }
-
-            // Check if the new edge created a deadlock cycle
-            if self.can_deadlock() {
-                // Remove the edge that was added
-                if let Some(used_by) = self.resources.get_mut(resource) {
-                    used_by.retain(|p| p != next_process);
+    
+        let waiting_queue = self.waiting.entry(resource.to_string()).or_insert(Vec::new());
+    
+        if let Some(next) = next_process {
+            println!("(2) process: {}, resource: {}, next_process: {:?}", process, resource, next_process);
+    
+            if Some(next) == waiting_queue.first().map(|s| s.as_str()) {
+                println!("(expected): process: {}, resource: {}, next_process: {:?}, graph: {:?}", process, resource, next_process, self.graph);
+    
+                waiting_queue.remove(0);
+                self.graph.get_mut(resource).unwrap().push(next.to_string());
+                if let Some(pos) = self.graph[next].iter().position(|x| x == resource) {
+                    self.graph.get_mut(next).unwrap().remove(pos);
                 }
-                return false;
+                
+    
+                if self.can_deadlock(next) {
+                    println!("release: process: {}, resource: {}, next_process: {:?}, graph: {:?}", process, resource, next_process, self.graph);
+                    self.graph.get_mut(resource).unwrap().pop();
+                    println!("release: process: {}, resource: {}, next_process: {:?}, graph: {:?}", process, resource, next_process, self.graph);
+                    false
+                } else {
+                    true
+                }
             } else {
-                return true;
+                false
             }
         } else {
-            return true;
+            println!("(3) process: {}, resource: {}, next_process: {:?}", process, resource, next_process);
+    
+            if let Some(next) = waiting_queue.get(0).cloned() {
+                waiting_queue.remove(0);
+                self.graph.get_mut(resource).unwrap().push(next);
+            }
+            true
         }
     }
+    
 
-    fn can_deadlock(&self) -> bool {
-        for (_, uses) in self.processes.iter() {
-            for resource in uses.iter() {
-                for waiting_process in self.resources.get(resource).unwrap().into_iter() {
-                    if self.can_deadlock_recursive(waiting_process, &mut HashSet::new()) {
-                        return true;
+    pub fn can_deadlock(&self, start: &str) -> bool {
+        fn dfs_visit(
+            node: &str,
+            graph: &HashMap<String, Vec<String>>,
+            colors: &mut HashMap<String, char>,
+            is_process: bool,
+        ) -> bool {
+            colors.insert(node.to_string(), 'g'); // mark the node as gray
+        
+            if let Some(neighbors) = graph.get(node) {
+                for neighbor in neighbors {
+                    // Only visit the neighbor if it's a process and the current node is a resource, or vice versa
+                    let neighbor_is_process = !is_process;
+                    if is_process != neighbor_is_process {
+                        let color = colors.entry(neighbor.to_string()).or_insert('w'); // default to white
+                        
+                        if *color == 'g' {
+                            return true; // found a cycle
+                        } else if *color == 'w' {
+                            if dfs_visit(neighbor, graph, colors, neighbor_is_process) {
+                                return true;
+                            }
+                        }
                     }
                 }
             }
-        }
-        return false;
-    }  
-
-    fn can_deadlock_recursive(&self, current: &str, visited: &mut HashSet<String>) -> bool {
-        if visited.contains(current) {
-            return true;
-        }
-        visited.insert(current.to_string());
-        for resource in self.processes.get(current).into_iter().flatten() {
-            for waiting_process in self.resources.get(resource).into_iter().flatten() {
-                if visited.contains(waiting_process) {
-                    return true;
-                }
-                if self.can_deadlock_recursive(waiting_process, visited) {
-                    return true;
-                }
-            }
-        }
-        visited.remove(current);
-        return false;
+        
+            colors.insert(node.to_string(), 'b'); // mark the node as black
+            false
+        } 
+        let mut colors = HashMap::new();
+        dfs_visit(start, &self.graph, &mut colors, true)
     }
-
 }
-    

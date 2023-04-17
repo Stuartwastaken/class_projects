@@ -1,0 +1,3 @@
+cargo:rerun-if-changed=build/main.rs
+cargo:rustc-env=TYPENUM_BUILD_CONSTS=/Users/stuart/2510/sray14/slumcs/target/debug/build/typenum-5a6abce9d94b331f/out/consts.rs
+cargo:rustc-env=TYPENUM_BUILD_OP=/Users/stuart/2510/sray14/slumcs/target/debug/build/typenum-5a6abce9d94b331f/out/op.rs
